@@ -1,4 +1,3 @@
-
 import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
 import bcrypt from 'bcryptjs';
@@ -10,13 +9,11 @@ export default async function handler(req, res) {
     const { name, email, password, role } = req.body;
 
     try {
-      // Verifica se o e-mail já está cadastrado
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ success: false, message: 'Usuário já existe.' });
       }
 
-      // Cria um novo usuário
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({
         name,
