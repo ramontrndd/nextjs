@@ -1,4 +1,3 @@
-// pages/api/users/login.js
 import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
 import jwt from 'jsonwebtoken';
