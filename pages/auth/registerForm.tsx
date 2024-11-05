@@ -86,9 +86,9 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box style={{ maxWidth: 400, margin: '100px auto',  }}>
-      <Typography variant="h4" gutterBottom align='center'>
-        Faça seu Cadastro
+    <Box style={{ maxWidth: 400, margin: 'auto',  }}>
+      <Typography variant="h5" gutterBottom align='center'>
+        Cadastre uma nova conta
       </Typography>
       <form onSubmit={handleSubmit} noValidate autoComplete="off">
         <TextField
@@ -128,7 +128,7 @@ const RegisterForm = () => {
         />
         <TextField
           select
-          label="Papel"
+          label="C"
           value={role}
           onChange={(e) => setRole(e.target.value)}
           fullWidth
