@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
-
 import React, { useState } from 'react';
 import { TextField, Button, Snackbar, Alert, MenuItem, Typography, Box } from '@mui/material';
 import { AlertColor } from '@mui/material';
@@ -25,7 +23,7 @@ const RegisterForm = () => {
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -57,7 +55,10 @@ const RegisterForm = () => {
       return;
     }
 
-    const userData = { name, email, password, role };
+    // Definir o status com base no papel do usuário
+    const userStatus = role === 'admin' ? false : true;  // 'admin' recebe false, 'user' recebe true
+
+    const userData = { name, email, password, role, status: userStatus };
 
     try {
       const response = await axios.post('/api/users/createUsers', userData);
@@ -86,7 +87,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box style={{ maxWidth: 400, margin: 'auto',  }}>
+    <Box style={{ maxWidth: 400, margin: 'auto' }}>
       <Typography variant="h5" gutterBottom align='center'>
         Cadastre uma nova conta
       </Typography>
@@ -128,7 +129,7 @@ const RegisterForm = () => {
         />
         <TextField
           select
-          label="C"
+          label="Perfil"
           value={role}
           onChange={(e) => setRole(e.target.value)}
           fullWidth
@@ -161,3 +162,4 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
+

@@ -1,24 +1,12 @@
-// src/app/dashboard/index.tsx
-"use client";
+import React from 'react';
+import ResponsiveDrawer from '@/components/dashboard/responsiveDrawer';
 
-import React, { useState } from 'react';
-import { Button } from '@mui/material';
-import Sidebar from '@/components/dashboard/sidebar';
-
-const DashboardPage = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
+const Dashboard: React.FC = () => {
   return (
-    <div>
-      <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
-      <Sidebar open={sidebarOpen} onClose={toggleSidebar} />
-      {/* O resto do conteúdo do seu dashboard vai aqui */}
-    </div>
+    <ResponsiveDrawer>
+      {/* Aqui você pode adicionar conteúdo específico do dashboard */}
+    </ResponsiveDrawer>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;

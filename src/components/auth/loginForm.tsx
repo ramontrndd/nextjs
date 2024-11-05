@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/auth/loginForm.tsx
-
-"use client";
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Snackbar, Alert, Typography, Box } from '@mui/material';
 import { AlertColor } from '@mui/material';
@@ -46,7 +43,16 @@ const LoginForm = () => {
     try {
       const response = await axios.post('/api/users/loginUsers', { email, password });
       
-      const data = response.data as { success: boolean };
+      const data = response.data as { success: boolean, message?: string };
+
+      // Verifica se o status é pendente (não aprovado)
+      if (response.status === 403) {
+        setSnackbarMessage('Sua conta ainda está pendente de aprovação.');
+        setSnackbarSeverity('warning');
+        setOpenSnackbar(true);
+        return;
+      }
+
       if (data.success) {
         setSnackbarMessage('Login realizado com sucesso!');
         setSnackbarSeverity('success');
