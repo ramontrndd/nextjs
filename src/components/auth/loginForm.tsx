@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+// src/components/auth/loginForm.tsx
 
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Snackbar, Alert, Typography, Box } from '@mui/material';
 import { AlertColor } from '@mui/material';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -13,15 +14,16 @@ const LoginForm = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('success');
+  const [loginSuccess, setLoginSuccess] = useState(false);  
 
-  // Estados de erro para validação
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Reseta os erros
     setEmailError(false);
     setPasswordError(false);
 
@@ -48,7 +50,9 @@ const LoginForm = () => {
       if (data.success) {
         setSnackbarMessage('Login realizado com sucesso!');
         setSnackbarSeverity('success');
-        // Redirecionar ou salvar token conforme necessário
+        setOpenSnackbar(true);
+        
+        setLoginSuccess(true);  
       }
     } catch (error: any) {
       if (error.response && error.response.data) {
@@ -57,14 +61,19 @@ const LoginForm = () => {
         setSnackbarMessage('Erro de rede.');
       }
       setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
-
-    setOpenSnackbar(true);
   };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+
+  useEffect(() => {
+    if (loginSuccess) {
+      router.push('/dashboard'); // Redirecionando corretamente para o caminho do dashboard
+    }
+  }, [loginSuccess, router]);
 
   return (
     <Box style={{ maxWidth: 400, margin: 'auto' }}>
@@ -83,7 +92,6 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
           helperText={emailError ? "Email é obrigatório." : ""}
-          
         />
         <TextField
           error={passwordError}
@@ -96,7 +104,6 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
           helperText={passwordError ? "Senha é obrigatória." : ""}
-         
         />
         <Button variant="contained" color="primary" type="submit" fullWidth>
           Entrar
