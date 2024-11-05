@@ -1,11 +1,33 @@
+"use client"
+import RegisterForm from "../../pages/auth/registerForm";
+import LoginForm from "../../pages/auth/loginForm";
+import { useState } from "react";
 
-export default function Home() {
+const Page = () => {
+  const [mostrarLogin, setMostrarLogin] = useState(true);
+
   return (
     <div>
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-      
+      {mostrarLogin ? (
+        <>
+          <LoginForm />
+          <p>
+            Não tem uma conta?{" "}
+            <button onClick={() => setMostrarLogin(false)}>Cadastre-se</button>
+          </p>
+        </>
+      ) : (
+        <>
+          <RegisterForm />
+          <p>
+            Já tem uma conta?{" "}
+            <button onClick={() => setMostrarLogin(true)}>Faça login</button>
+          </p>
+        </>
+      )}
     </div>
   );
-}
+};
+
+export default Page;
+
