@@ -23,11 +23,13 @@ import {
   AlertColor,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import { UserInterface } from '@/interfaces/user';
 import { ApiResponse } from '@/interfaces/apiResponse';
-import ToggleStatusButton from '@/components/dashboard/toggleStatusButton';
+import ToggleStatusButton from '@/components/shared/toggleStatusButton';
+import DeleteUserButton from '@/components/shared/deleteUserButton';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const GradientTypography = styled(Typography)(({ theme }) => ({
   background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
@@ -72,6 +74,11 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
       user._id === userId ? { ...user, status: newStatus } : user
     ));
     showMessage('Status do usuário atualizado com sucesso', 'success');
+  };
+
+  const handleDelete = (userId: string) => {
+    setFilteredUsers(filteredUsers.filter(user => user._id !== userId));
+    showMessage('Usuário deletado com sucesso', 'success');
   };
 
   useEffect(() => {
@@ -188,9 +195,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
                     <IconButton size="small" color="primary">
                       <EditIcon />
                     </IconButton>
-                    <IconButton size="small" color="error">
-                      <DeleteIcon />
-                    </IconButton>
+                    <DeleteUserButton userId={user._id || ''} onDelete={handleDelete} />
                     <ToggleStatusButton key={`toggle-${user._id}`} userId={user._id || ''} currentStatus={user.status} onStatusChange={handleStatusChange} />
                   </TableCell>
                 </TableRow>
