@@ -24,7 +24,7 @@ const UserSchema: Schema = new Schema<UserInterface>({
     required: [true, 'Por favor, insira uma senha.'],
     minlength: [5, 'A senha deve ter pelo menos 5 caracteres.'],
     match: [
-      /^[a-zA-Z0-9!@#$%^&*()_+={}[\]:;'"<>,.?/~`-]{5}$/,
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}[\]:;'"<>,.?/~`-])[A-Za-z\d!@#$%^&*()_+={}[\]:;'"<>,.?/~`-]{5,}$/,
       'A senha deve conter pelo menos 5 caracteres, incluindo letras, números e caracteres especiais.',
     ],
   },
