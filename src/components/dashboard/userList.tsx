@@ -81,31 +81,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
     showMessage('Usuário deletado com sucesso', 'success');
   };
 
-  const handleSave = async (updatedUser: UserInterface) => {
-    try {
-      setLoading(true);
-      const token = Cookies.get('token');
-      const response = await axios.patch<ApiResponse<UserInterface>>(`/api/users/updateUser`, updatedUser, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.data.success) {
-        setFilteredUsers(filteredUsers.map(user => 
-          user._id === updatedUser._id ? response.data.data : user
-        ));
-        showMessage('Usuário atualizado com sucesso', 'success');
-      } else {
-        showMessage(response.data.message || 'Falha ao atualizar usuário', 'error');
-      }
-    } catch (error: any) {
-      showMessage(error.response?.data?.message || 'Erro de conexão com o servidor', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     const filtered = users.filter(user => 
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -217,7 +192,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <EditUserButton user={user} onSave={handleSave} />
                     <DeleteUserButton userId={user._id || ''} onDelete={handleDelete} />
                     <ToggleStatusButton key={`toggle-${user._id}`} userId={user._id || ''} currentStatus={user.status} onStatusChange={handleStatusChange} />
                   </TableCell>

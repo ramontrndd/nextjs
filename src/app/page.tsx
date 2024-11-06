@@ -7,13 +7,13 @@ import LoginForm from "@/components/auth/loginForm";
 import { Button, Slide } from "@mui/material";
 
 const Page = () => {
-  const [mostrarLogin, setMostrarLogin] = useState(true);
+  const [mostrarLogin, setMostrarLogin] = useState(false);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 sm:p-8 sm:m-8">
       <div className="p-8 bg-white rounded-lg shadow-lg max-w-md w-full">
         <Slide direction="down" in={mostrarLogin} mountOnEnter unmountOnExit timeout={500}>
-          <div style={{ display: mostrarLogin ? 'block' : 'none' }} >
+          <div style={{ display: mostrarLogin ? 'block' : 'none' }}>
             <LoginForm />
             <div className="flex flex-col items-center p-3">
               <p>
@@ -32,7 +32,7 @@ const Page = () => {
         </Slide>
         <Slide direction="down" in={!mostrarLogin} mountOnEnter unmountOnExit timeout={500}>
           <div style={{ display: !mostrarLogin ? 'block' : 'none' }}>
-            <RegisterForm onSave={(user) => console.log(user)} />
+            <RegisterForm />
             <div className="flex flex-col items-center p-3">
               <p className="mt-4 text-center">
                 Já tem uma conta?{" "}

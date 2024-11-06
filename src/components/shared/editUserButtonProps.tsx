@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import RegisterForm from '@/components/auth/registerForm';
+
 import { UserInterface } from '@/interfaces/user';
 
 interface EditUserButtonProps {
@@ -10,7 +10,7 @@ interface EditUserButtonProps {
   onSave: (user: UserInterface) => void;
 }
 
-const EditUserButton: React.FC<EditUserButtonProps> = ({ user, onSave }) => {
+const EditUserButton: React.FC<EditUserButtonProps> = ({  }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleClickOpen = () => {
@@ -21,10 +21,7 @@ const EditUserButton: React.FC<EditUserButtonProps> = ({ user, onSave }) => {
     setOpen(false);
   };
 
-  const handleSave = (updatedUser: UserInterface) => {
-    onSave(updatedUser);
-    handleClose();
-  };
+
 
   return (
     <>
@@ -34,7 +31,7 @@ const EditUserButton: React.FC<EditUserButtonProps> = ({ user, onSave }) => {
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Editar Usuário</DialogTitle>
         <DialogContent>
-          <RegisterForm user={user} onSave={handleSave} />
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
