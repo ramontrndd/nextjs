@@ -20,8 +20,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { UserInterface } from '@/interfaces/user';
-import UserProfile from '@/components/dashboard/userProfile'; // Importe o componente UserProfile
-import WelcomeMessage from '@/components/dashboard/welcomeComponent'; // Importe o componente WelcomeMessage
+import UserProfile from '@/components/dashboard/userProfile';
+import WelcomeMessage from '@/components/dashboard/welcomeComponent';
+import UserList from '@/components/dashboard/userList';
+import LogoutButton from '@/components/shared/logoutButton';
 
 const drawerWidth = 240;
 
@@ -97,6 +99,8 @@ export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [userProfile, setUserProfile] = React.useState<UserInterface | null>(null);
+  const [users, setUsers] = React.useState<UserInterface[]>([]);
+  const [view, setView] = React.useState<'profile' | 'list'>('profile');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -115,8 +119,24 @@ export default function MiniDrawer() {
         },
       });
       setUserProfile(response.data.data);
+      setView('profile');
     } catch (error) {
       console.error('Erro ao buscar perfil do usuário:', error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get<{ success: boolean; data: UserInterface[] }>('/api/users/getAllUsers', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsers(response.data.data);
+      setView('list');
+    } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
     }
   };
 
@@ -137,9 +157,10 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Gerenciador de Usuários
           </Typography>
+          <LogoutButton />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open} className={open ? '' : 'closed'}>
@@ -156,6 +177,14 @@ export default function MiniDrawer() {
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary="Profile" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton onClick={() => { fetchUsers(); handleDrawerClose(); }}>
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Listar Usuários" />
             </ListItemButton>
           </ListItem>
         </List>
@@ -177,8 +206,10 @@ export default function MiniDrawer() {
         }}
       >
         <DrawerHeader />
-        {userProfile ? (
+        {view === 'profile' && userProfile ? (
           <UserProfile userProfile={userProfile} />
+        ) : view === 'list' && users.length > 0 ? (
+          <UserList users={users} />
         ) : (
           <WelcomeMessage />
         )}

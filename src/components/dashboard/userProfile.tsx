@@ -15,7 +15,7 @@ const ProfileItem = styled(Paper)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: 300,
+  width: 400,
   fontWeight: 'bold',
   
   gap: theme.spacing(2),
