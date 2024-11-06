@@ -1,13 +1,14 @@
-import dbConnect from '../../../lib/dbConnect';
-import User from '../../../models/User';
+import { NextApiRequest, NextApiResponse } from 'next';
+import connectDB from '@/lib/db';
+import User from '@/models/UserModel';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-export default async function handler(req, res) {
-  await dbConnect();
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await connectDB();
 
   if (req.method === 'POST') {
-    const { email, password } = req.body;
+    const { email, password }: { email: string; password: string } = req.body;
 
     try {
       // Verifica se o usuário existe
@@ -30,14 +31,14 @@ export default async function handler(req, res) {
       // Gera o token JWT
       const token = jwt.sign(
         { id: user._id, role: user.role },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET as string,
         { expiresIn: '1h' }
       );
 
       // Retorna o token junto com os dados do usuário
-      res.status(200).json({ success: true, token, user: { name: user.name, email: user.email, role: user.role } });
+      res.status(200).json({ success: true, token});
     } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+      res.status(500).json({ success: false, error: (error as Error).message });
     }
   } else {
     res.setHeader('Allow', ['POST']);
