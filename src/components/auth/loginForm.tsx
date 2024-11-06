@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Snackbar, Alert, Typography, Box } from '@mui/material';
+import HttpsIcon from '@mui/icons-material/Https';
 import { AlertColor } from '@mui/material';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -17,6 +19,17 @@ const LoginForm = () => {
   const [passwordError, setPasswordError] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    // Verifica se há uma mensagem de alerta no localStorage
+    const authMessage = localStorage.getItem('authMessage');
+    if (authMessage) {
+      setSnackbarMessage(authMessage);
+      setSnackbarSeverity('warning');
+      setOpenSnackbar(true);
+      localStorage.removeItem('authMessage'); // Remove a mensagem do localStorage após exibir
+    }
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -41,9 +54,9 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await axios.post('/api/users/loginUsers', { email, password });
+      const response = await axios.post('/api/users/loginUser', { email, password });
       
-      const data = response.data as { success: boolean, message?: string };
+      const data = response.data as { success: boolean, token?: string, message?: string };
 
       // Verifica se o status é pendente (não aprovado)
       if (response.status === 403) {
@@ -53,7 +66,10 @@ const LoginForm = () => {
         return;
       }
 
-      if (data.success) {
+      if (data.success && data.token) {
+        // Salva o token nos cookies
+        Cookies.set('token', data.token, { expires: 1 }); // O token expira em 1 dia
+
         setSnackbarMessage('Login realizado com sucesso!');
         setSnackbarSeverity('success');
         setOpenSnackbar(true);
@@ -83,8 +99,9 @@ const LoginForm = () => {
 
   return (
     <Box style={{ maxWidth: 400, margin: 'auto' }}>
-      <Typography variant="h4" gutterBottom align='center'>
-        Faça seu login
+      <Typography variant="h4" gutterBottom align='center' className='flex flex-col items-center gap-3 font-bold font text-customBlue'>
+      <HttpsIcon  sx={{ fontSize: 50 }}/>
+      LOGIN
       </Typography>
       <form onSubmit={handleSubmit} noValidate autoComplete="off">
         <TextField

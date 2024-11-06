@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Snackbar, Alert, MenuItem, Typography, Box } from '@mui/material';
 import { AlertColor } from '@mui/material';
 import axios from 'axios';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
 const roles = [
   { value: 'user', label: 'Usuário' },
@@ -88,8 +89,9 @@ const RegisterForm = () => {
 
   return (
     <Box style={{ maxWidth: 400, margin: 'auto' }}>
-      <Typography variant="h5" gutterBottom align='center'>
-        Cadastre uma nova conta
+      <Typography variant="h4" gutterBottom align='center' className='flex flex-col items-center gap-3 font-bold text-customBlue'>
+        <AccountCircleRoundedIcon sx={{fontSize: 50}}/>
+        CADASTRO
       </Typography>
       <form onSubmit={handleSubmit} noValidate autoComplete="off">
         <TextField
