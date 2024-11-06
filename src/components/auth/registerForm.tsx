@@ -15,6 +15,7 @@ const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
   const [role, setRole] = useState('user');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -24,6 +25,7 @@ const RegisterForm = () => {
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [contactNumberError, setContactNumberError] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -32,25 +34,33 @@ const RegisterForm = () => {
     setNameError(false);
     setEmailError(false);
     setPasswordError(false);
+    setContactNumberError(false);
 
     // Validação simples
-    if (name === '') {
+    if (name === '' || !/^[a-zA-ZÀ-ÿ\s]+$/.test(name)) {
       setNameError(true);
-      setSnackbarMessage('O nome é obrigatório.');
+      setSnackbarMessage('O nome deve conter apenas letras e espaços.');
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
       return;
     }
-    if (email === '') {
+    if (email === '' || !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       setEmailError(true);
-      setSnackbarMessage('O email é obrigatório.');
+      setSnackbarMessage('Por favor, insira um e-mail válido.');
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
       return;
     }
-    if (password === '') {
+    if (password === '' || !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}[\]:;'"<>,.?/~`-])[A-Za-z\d!@#$%^&*()_+={}[\]:;'"<>,.?/~`-]{5,}$/.test(password)) {
       setPasswordError(true);
-      setSnackbarMessage('A senha é obrigatória.');
+      setSnackbarMessage('A senha deve conter pelo menos 5 caracteres, incluindo letras, números e caracteres especiais.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+      return;
+    }
+    if (contactNumber === '' || !/^\d{11}$/.test(contactNumber)) {
+      setContactNumberError(true);
+      setSnackbarMessage('Por favor, insira um número de telefone válido com 11 dígitos.');
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
       return;
@@ -59,10 +69,10 @@ const RegisterForm = () => {
     // Definir o status com base no papel do usuário
     const userStatus = role === 'admin' ? false : true;  // 'admin' recebe false, 'user' recebe true
 
-    const userData = { name, email, password, role, status: userStatus };
+    const userData = { name, email, password, contactNumber, role, status: userStatus };
 
     try {
-      const response = await axios.post('/api/users/createUsers', userData);
+      const response = await axios.post('/api/users/newUser', userData);
 
       setSnackbarMessage('Cadastro realizado com sucesso!');
       setSnackbarSeverity('success');
@@ -70,6 +80,7 @@ const RegisterForm = () => {
       setName('');
       setEmail('');
       setPassword('');
+      setContactNumber('');
       setRole('user');
     } catch (error: any) {
       if (error.response && error.response.data) {
@@ -103,7 +114,7 @@ const RegisterForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          helperText={nameError ? "Nome é obrigatório." : ""}
+          helperText={nameError ? "O nome deve conter apenas letras e espaços." : ""}
         />
         <TextField
           error={emailError}
@@ -115,7 +126,7 @@ const RegisterForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          helperText={emailError ? "Email é obrigatório." : ""}
+          helperText={emailError ? "Por favor, insira um e-mail válido." : ""}
         />
         <TextField
           error={passwordError}
@@ -127,7 +138,19 @@ const RegisterForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          helperText={passwordError ? "Senha é obrigatória." : ""}
+          helperText={passwordError ? "A senha deve conter pelo menos 5 caracteres, incluindo letras, números e caracteres especiais." : ""}
+        />
+        <TextField
+          error={contactNumberError}
+          label="Telefone"
+          type="text"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={contactNumber}
+          onChange={(e) => setContactNumber(e.target.value)}
+          required
+          helperText={contactNumberError ? "Por favor, insira um número de telefone válido com 11 dígitos." : ""}
         />
         <TextField
           select
@@ -164,4 +187,3 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
-
