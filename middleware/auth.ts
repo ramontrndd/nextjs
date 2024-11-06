@@ -4,20 +4,23 @@ import { UserInterface } from '@/interfaces/user';
 import connectDB from '@/lib/db';
 import User from '@/models/UserModel';
 
-interface AuthenticatedRequest extends NextApiRequest {
+export interface AuthenticatedRequest extends NextApiRequest {
   user?: UserInterface;
 }
 
-const auth = async (req: AuthenticatedRequest, res: NextApiResponse, next: () => void) => {
+export const auth = async (req: AuthenticatedRequest, res: NextApiResponse, next: () => void) => {
   await connectDB();
 
   const authHeader = req.headers.authorization;
+  console.log('Authorization Header:', authHeader); // Adicione este log
 
   if (!authHeader) {
     return res.status(401).json({ success: false, message: 'Acesso negado. Cabeçalho de autorização não encontrado.' });
   }
 
-  const token = authHeader.split(' ')[1];
+  // Remover o prefixo 'Bearer ' do token
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7, authHeader.length) : authHeader;
+  console.log('Token:', token); // Adicione este log
 
   if (!token) {
     return res.status(401).json({ success: false, message: 'Acesso negado. Token não fornecido.' });
@@ -25,6 +28,7 @@ const auth = async (req: AuthenticatedRequest, res: NextApiResponse, next: () =>
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    console.log('Decoded Token:', decoded); // Adicione este log
 
     const user = await User.findById(decoded.id).select('-password');
     if (!user) {
@@ -38,5 +42,3 @@ const auth = async (req: AuthenticatedRequest, res: NextApiResponse, next: () =>
     return res.status(401).json({ success: false, message: 'Token inválido.', error: (err as Error).message });
   }
 };
-
-export default auth;
