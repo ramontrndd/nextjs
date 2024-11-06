@@ -1,3 +1,4 @@
+// src/app/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,16 +17,16 @@ const Page = () => {
             <LoginForm />
             <div className="flex flex-col items-center p-3">
               <p>
-                Não tem uma conta?{" "}  </p>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setMostrarLogin(false)}
-                  className="font-bold"
-                >
-                  Cadastre-se
-                </Button>
-            
+                Não tem uma conta?{" "}  
+              </p>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setMostrarLogin(false)}
+                className="font-bold"
+              >
+                Cadastre-se
+              </Button>
             </div>
           </div>
         </Slide>
@@ -34,17 +35,17 @@ const Page = () => {
             <RegisterForm />
             <div className="flex flex-col items-center p-3">
               <p className="mt-4 text-center">
-                Já tem uma conta?{" "}</p>
-                <Button
-                  variant="text"
-                  color="primary"
-                  onClick={() => setMostrarLogin(true)}
-                  className="font-bold"
-                >
-                  Faça login
-                </Button>
+                Já tem uma conta?{" "}
+              </p>
+              <Button
+                variant="text"
+                color="primary"
+                onClick={() => setMostrarLogin(true)}
+                className="font-bold"
+              >
+                Faça login
+              </Button>
             </div>
-            
           </div>
         </Slide>
       </div>

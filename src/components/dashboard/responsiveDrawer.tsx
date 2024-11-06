@@ -23,7 +23,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { UserInterface } from '@/interfaces/user';
 import UserProfile from '@/components/dashboard/userProfile';
-import WelcomeMessage from '@/components/dashboard/welcomeComponent';
+import WelcomeMessage from '@/components/dashboard/homeComponent';
 import UserList from '@/components/dashboard/userList';
 import LogoutButton from '@/components/shared/logoutButton';
 

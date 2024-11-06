@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 
-const WelcomeComponent: React.FC = () => {
+const homeComponent: React.FC = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -14,4 +14,4 @@ const WelcomeComponent: React.FC = () => {
   );
 };
 
-export default WelcomeComponent;
+export default homeComponent;
