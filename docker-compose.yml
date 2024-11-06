@@ -1,5 +1,21 @@
 version: '3.8'
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my_app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+      - /app/node_modules
+
   mongodb:
     image: mongo:latest
     container_name: mongodb
