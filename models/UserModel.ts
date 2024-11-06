@@ -6,8 +6,8 @@ const UserSchema: Schema = new Schema<UserInterface>({
     type: String,
     required: [true, 'Por favor, insira um nome.'],
     match: [
-      /^[a-zA-ZÀ-ÿ\s]+$/,
-      'O nome deve conter apenas letras e espaços.',
+      /^(?!\s)(?!.*\s$)[a-zA-ZÀ-ÿ\s]+$/,
+      'O nome deve conter apenas letras e espaços, sem espaços no início ou no final.',
     ],
   },
   email: {
@@ -29,7 +29,7 @@ const UserSchema: Schema = new Schema<UserInterface>({
     ],
   },
   contactNumber: {
-    type: Number,
+    type: String,
     required: [true, 'Por favor, insira um telefone.'],
     match: [
       /^\d{11}$/,

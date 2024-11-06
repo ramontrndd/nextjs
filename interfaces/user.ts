@@ -3,7 +3,7 @@ export interface UserInterface {
     name: string;
     password: string;
     email: string;
-    contactNumber: number;
+    contactNumber: string;
     status: boolean;
     role: 'user' | 'admin';
   }
