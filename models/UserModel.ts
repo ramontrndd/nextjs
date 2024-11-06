@@ -1,12 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
-import { IUser } from './../interfaces/User';
+import { UserInterface } from '@/interfaces/user';
 
-const UserSchema: Schema = new Schema<IUser>({
+const UserSchema: Schema = new Schema<UserInterface>({
   name: {
     type: String,
     required: [true, 'Por favor, insira um nome.'],
     match: [
-      /^[a-zA-Z\s]+$/,
+      /^[a-zA-ZÀ-ÿ\s]+$/,
       'O nome deve conter apenas letras e espaços.',
     ],
   },
@@ -19,23 +19,32 @@ const UserSchema: Schema = new Schema<IUser>({
       'Por favor, insira um e-mail válido.',
     ],
   },
-  telefone: {
+  password: {
     type: String,
+    required: [true, 'Por favor, insira uma senha.'],
+    minlength: [5, 'A senha deve ter pelo menos 5 caracteres.'],
+    match: [
+      /^[a-zA-Z0-9!@#$%^&*()_+={}[\]:;'"<>,.?/~`-]{5}$/,
+      'A senha deve conter pelo menos 5 caracteres, incluindo letras, números e caracteres especiais.',
+    ],
+  },
+  contactNumber: {
+    type: Number,
     required: [true, 'Por favor, insira um telefone.'],
     match: [
-      /^\+?[1-9]\d{1,14}$/,
-      'Por favor, insira um número de telefone válido.',
+      /^\d{11}$/,
+      'Por favor, insira um número de telefone válido com 11 dígitos.',
     ],
   },
   status: {
     type: Boolean,
-    default: true, // Assume que o usuário está ativo por padrão
+    default: true, 
   },
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
   },
-}, { collection: 'nextapp' });  // Aqui você especifica a coleção
+}, { collection: 'nextapp' });
 
-export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export default mongoose.models.User || mongoose.model<UserInterface>('User', UserSchema);

@@ -1,12 +1,15 @@
-import dbConnect from '../../../lib/dbConnect';
-import User from '../../../models/User';
-import bcrypt from 'bcryptjs';
+import { NextApiRequest, NextApiResponse } from 'next';
+import connectDB from '@/lib/db';
+import User from '@/models/UserModel';
 
-export default async function handler(req, res) {
-  await dbConnect();
+import bcrypt from 'bcryptjs';
+import { UserInterface } from '@/interfaces/user';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await connectDB();
 
   if (req.method === 'POST') {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, contactNumber }: UserInterface = req.body;
 
     try {
       // Verificando se já existe um usuário com o e-mail informado
@@ -25,6 +28,7 @@ export default async function handler(req, res) {
       const user = new User({
         name,
         email,
+        contactNumber,
         password: hashedPassword,
         role,
         status,  // status agora é atribuído de acordo com o role
@@ -37,7 +41,7 @@ export default async function handler(req, res) {
       res.status(201).json({ success: true, data: user });
     } catch (error) {
       // Tratamento de erro caso algo aconteça
-      res.status(400).json({ success: false, error: error.message });
+      res.status(400).json({ success: false, error: (error as Error).message });
     }
   } else {
     // Se o método não for POST, retornamos o erro 405
