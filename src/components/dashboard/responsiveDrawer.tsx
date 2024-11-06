@@ -1,5 +1,3 @@
-// src/components/dashboard/MiniDrawer.tsx
-
 import * as React from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -18,9 +16,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-
 import PersonIcon from '@mui/icons-material/Person';
-import Link from 'next/link'; // Importando Link do Next.js
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { UserInterface } from '@/interfaces/user';
+import UserProfile from '@/components/dashboard/userProfile'; // Importe o componente UserProfile
+import WelcomeMessage from '@/components/dashboard/welcomeComponent'; // Importe o componente WelcomeMessage
 
 const drawerWidth = 240;
 
@@ -95,6 +96,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [userProfile, setUserProfile] = React.useState<UserInterface | null>(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,6 +104,20 @@ export default function MiniDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get<{ success: boolean; data: UserInterface }>('/api/users/getProfile', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUserProfile(response.data.data);
+    } catch (error) {
+      console.error('Erro ao buscar perfil do usuário:', error);
+    }
   };
 
   return (
@@ -135,7 +151,7 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton component={Link} href="/dashboard/profile" onClick={handleDrawerClose}>
+            <ListItemButton onClick={() => { fetchUserProfile(); handleDrawerClose(); }}>
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
@@ -161,7 +177,11 @@ export default function MiniDrawer() {
         }}
       >
         <DrawerHeader />
-        {/* Aqui você pode renderizar conteúdo específico da página */}
+        {userProfile ? (
+          <UserProfile userProfile={userProfile} />
+        ) : (
+          <WelcomeMessage />
+        )}
       </Box>
     </Box>
   );
