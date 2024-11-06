@@ -1,4 +1,4 @@
-import {  NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 import connectDB from '@/lib/db';
 import User from '@/models/UserModel';
 import { AuthenticatedRequest, auth } from '@/middleware/auth';
@@ -15,6 +15,14 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
         return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
       }
 
+      // Verifica se o email já existe no banco de dados
+      if (email && email !== user.email) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return res.status(400).json({ success: false, message: 'Email já está em uso.' });
+        }
+      }
+
       // Atualiza os campos do usuário
       if (name) user.name = name;
       if (email) user.email = email;
@@ -27,10 +35,10 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
       }
 
       // Salva as alterações no banco de dados
-      await User.findByIdAndUpdate(user._id, user, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
 
       res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({ success: true, data: user });
+      res.status(200).json({ success: true, data: updatedUser });
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.status(500).json({ success: false, error: (error as Error).message });

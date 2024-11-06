@@ -32,7 +32,7 @@ const Page = () => {
         </Slide>
         <Slide direction="down" in={!mostrarLogin} mountOnEnter unmountOnExit timeout={500}>
           <div style={{ display: !mostrarLogin ? 'block' : 'none' }}>
-            <RegisterForm />
+            <RegisterForm onSave={(user) => console.log(user)} />
             <div className="flex flex-col items-center p-3">
               <p className="mt-4 text-center">
                 Já tem uma conta?{" "}

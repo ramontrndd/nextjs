@@ -22,12 +22,12 @@ import {
   Alert,
   AlertColor,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import { UserInterface } from '@/interfaces/user';
 import { ApiResponse } from '@/interfaces/apiResponse';
 import ToggleStatusButton from '@/components/shared/toggleStatusButton';
 import DeleteUserButton from '@/components/shared/deleteUserButton';
+import EditUserButton from '@/components/shared/editUserButtonProps'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -79,6 +79,31 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
   const handleDelete = (userId: string) => {
     setFilteredUsers(filteredUsers.filter(user => user._id !== userId));
     showMessage('Usuário deletado com sucesso', 'success');
+  };
+
+  const handleSave = async (updatedUser: UserInterface) => {
+    try {
+      setLoading(true);
+      const token = Cookies.get('token');
+      const response = await axios.patch<ApiResponse<UserInterface>>(`/api/users/updateUser`, updatedUser, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        setFilteredUsers(filteredUsers.map(user => 
+          user._id === updatedUser._id ? response.data.data : user
+        ));
+        showMessage('Usuário atualizado com sucesso', 'success');
+      } else {
+        showMessage(response.data.message || 'Falha ao atualizar usuário', 'error');
+      }
+    } catch (error: any) {
+      showMessage(error.response?.data?.message || 'Erro de conexão com o servidor', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -192,9 +217,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <IconButton size="small" color="primary">
-                      <EditIcon />
-                    </IconButton>
+                    <EditUserButton user={user} onSave={handleSave} />
                     <DeleteUserButton userId={user._id || ''} onDelete={handleDelete} />
                     <ToggleStatusButton key={`toggle-${user._id}`} userId={user._id || ''} currentStatus={user.status} onStatusChange={handleStatusChange} />
                   </TableCell>
