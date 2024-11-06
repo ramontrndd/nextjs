@@ -16,7 +16,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { UserInterface } from '@/interfaces/user';
@@ -100,7 +102,7 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
   const [userProfile, setUserProfile] = React.useState<UserInterface | null>(null);
   const [users, setUsers] = React.useState<UserInterface[]>([]);
-  const [view, setView] = React.useState<'profile' | 'list'>('profile');
+  const [view, setView] = React.useState<'welcome' | 'profile' | 'list'>('welcome');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -172,7 +174,15 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton onClick={() => { fetchUserProfile(); handleDrawerClose(); }}>
+            <ListItemButton onClick={() => setView('welcome')}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Início" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton onClick={() => { fetchUserProfile(); }}>
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
@@ -180,9 +190,9 @@ export default function MiniDrawer() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton onClick={() => { fetchUsers(); handleDrawerClose(); }}>
+            <ListItemButton onClick={() => { fetchUsers(); }}>
               <ListItemIcon>
-                <PersonIcon />
+                <GroupIcon />
               </ListItemIcon>
               <ListItemText primary="Listar Usuários" />
             </ListItemButton>
@@ -206,13 +216,9 @@ export default function MiniDrawer() {
         }}
       >
         <DrawerHeader />
-        {view === 'profile' && userProfile ? (
-          <UserProfile userProfile={userProfile} />
-        ) : view === 'list' && users.length > 0 ? (
-          <UserList users={users} />
-        ) : (
-          <WelcomeMessage />
-        )}
+        {view === 'welcome' && <WelcomeMessage />}
+        {view === 'profile' && userProfile && <UserProfile userProfile={userProfile} />}
+        {view === 'list' && users.length > 0 && <UserList users={users} />}
       </Box>
     </Box>
   );
