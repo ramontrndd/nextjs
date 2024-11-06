@@ -1,4 +1,5 @@
 import {  NextApiResponse } from 'next';
+import mongoose from 'mongoose';
 import connectDB from '@/lib/db';
 import User from '@/models/UserModel';
 import { AuthenticatedRequest, auth } from '@/middleware/auth';
@@ -7,27 +8,24 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
   await connectDB();
 
   if (req.method === 'PATCH') {
-    const { name, email, contactNumber, role, status } = req.body;
+    const { userId, status } = req.body;
 
     try {
-      const user = req.user;
+      // Verifica se o userId é um ObjectId válido
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ success: false, message: 'ID de usuário inválido.' });
+      }
+
+      const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
       }
 
-      // Atualiza os campos do usuário
-      if (name) user.name = name;
-      if (email) user.email = email;
-      if (contactNumber) user.contactNumber = contactNumber;
-      if (role) user.role = role;
-
-      // Alterna o campo status se toggleStatus for true
-      if (status) {
-        user.status = !user.status;
-      }
+      // Atualiza o campo status do usuário
+      user.status = status;
 
       // Salva as alterações no banco de dados
-      await User.findByIdAndUpdate(user._id, user, { new: true });
+      await user.save();
 
       res.setHeader('Content-Type', 'application/json');
       res.status(200).json({ success: true, data: user });
