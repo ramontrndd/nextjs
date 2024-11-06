@@ -7,10 +7,10 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
   await connectDB();
 
   if (req.method === 'PATCH') {
-    const { name, email, contactNumber, role, status } = req.body;
+    const { userId, name, email, contactNumber, role, status } = req.body;
 
     try {
-      const user = req.user;
+      const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
       }
@@ -28,14 +28,10 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
       if (email) user.email = email;
       if (contactNumber) user.contactNumber = contactNumber;
       if (role) user.role = role;
-
-      // Alterna o campo status se toggleStatus for true
-      if (status) {
-        user.status = !user.status;
-      }
+      if (status !== undefined) user.status = status;
 
       // Salva as alterações no banco de dados
-      const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
+      const updatedUser = await user.save();
 
       res.setHeader('Content-Type', 'application/json');
       res.status(200).json({ success: true, data: updatedUser });
