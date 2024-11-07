@@ -1,7 +1,7 @@
 ## 🛠️ Funcionalidades da Aplicação
 ### 1. **Cadastro de Usuários (Create)**
-🛑 --**IMPORTANTE** a criação de uma novo usuário tem um select para `Administrador` & `Usuário` caso selecione usuário recebe o status `true`
- pode ter acesso a dashboard de usuário, caso selecione `Administrador` sera preciso ser feito o aceite por outro usuario, deixei essa função como qualquer um, mas poderia delimitar permissões para cada role dentro do sistema.
+🛑 --**IMPORTANTE** A criação de uma novo usuário tem um select para `Administrador` & `Usuário` caso selecione `Usuário` recebe o status `true`
+ podendo ter acesso direto ao dashboard de usuário, caso selecione `Administrador` sera necessario o aceite por outro usuario, deixei essa função sem delimitar permissão só para ser testado mas poderia delimitar permissões para cada role dentro do sistema.
 
  - **Descrição**: Permite que novos usuários se cadastrem na aplicação preenchendo um formulário com informações essenciais, como nome, email, número de contato e perfil (usuário ou administrador).
 - **Funcionalidade**:
