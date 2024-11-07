@@ -35,8 +35,8 @@ Siga os passos abaixo para configurar e rodar a aplicação localmente utilizand
 - **Docker Compose** incluído na instalação do Docker Desktop.
 ### 📥 Clonar o Repositório
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/ramontrndd/nextjs.git
+cd nextjs
 ```
 ### 📝 Configurar as Variáveis de Ambiente
 Crie um arquivo 
