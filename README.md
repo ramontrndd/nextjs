@@ -1,6 +1,9 @@
 ## 🛠️ Funcionalidades da Aplicação
 ### 1. **Cadastro de Usuários (Create)**
-- **Descrição**: Permite que novos usuários se cadastrem na aplicação preenchendo um formulário com informações essenciais, como nome, email, número de contato e perfil (usuário ou administrador).
+🛑 --**IMPORTANTE** a criação de uma novo usuário tem um select para `Administrador` & `Usuário` caso selecione usuário recebe o status `true`
+ pode ter acesso a dashboard de usuário, caso selecione `Administrador` sera preciso ser feito o aceite por outro usuario, deixei essa função como qualquer um, mas poderia delimitar permissões para cada role dentro do sistema.
+
+ - **Descrição**: Permite que novos usuários se cadastrem na aplicação preenchendo um formulário com informações essenciais, como nome, email, número de contato e perfil (usuário ou administrador).
 - **Funcionalidade**:
   - Validação de dados no frontend e backend para garantir a integridade das informações.
   - Armazenamento seguro das informações no banco de dados MongoDB.
