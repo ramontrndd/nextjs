@@ -15,7 +15,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: ["./wait-for-it.sh", "mongodb:27017", "--", "npm", "run", "dev"]
 
   mongodb:
     image: mongo:latest
